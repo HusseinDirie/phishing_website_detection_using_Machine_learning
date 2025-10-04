@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detection Result</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* === Global Styles === */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #2a5298, #1e3c72); 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            padding: 0 20px;
+        }
+        .container { max-width: 600px; text-align: center; }
+
+        /* === Card Design === */
+        .result-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out;
+        }
+        .result-card:hover { transform: translateY(-10px); }
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 20px; }
+
+        /* === Result Box === */
+        .result-box {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 20px 0;
+            transition: 0.5s ease;
+            width: 100%;
+            text-align: center;
+        }
+        .phishing { color: #d9534f; background: #f8d7da; border: 2px solid #d9534f; }
+        .legitimate { color: #28a745; background: #d4edda; border: 2px solid #28a745; }
+        .glow { animation: glowEffect 1.5s infinite alternate; }
+        .shake { animation: shakeEffect 0.5s ease-in-out; }
+
+        /* === Threat Info === */
+        .threat-info { margin: 20px 0; font-size: 18px; text-align: left; }
+        .threat-info p { margin: 5px 0; }
+        .high { color: red; font-weight: bold; }
+        .low { color: green; font-weight: bold; }
+
+        /* === Buttons === */
+        .buttons { margin-top: 25px; display: flex; justify-content: center; }
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            margin: 5px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        .btn-retry { background: #ffcc00; color: black; }
+        .btn-share { background: #007bff; color: white; }
+        .btn:hover { opacity: 0.85; }
+
+        /* === Animations === */
+        @keyframes glowEffect {
+            from { box-shadow: 0 0 15px rgba(40, 167, 69, 0.7); }
+            to { box-shadow: 0 0 30px rgba(40, 167, 69, 1); }
+        }
+        @keyframes shakeEffect {
+            10%, 90% { transform: translateX(-3px); }
+            20%, 80% { transform: translateX(3px); }
+            30%, 50%, 70% { transform: translateX(-6px); }
+            40%, 60% { transform: translateX(6px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-card">
+            <h2>🔍 Phishing Detection Result</h2>
+            <p><strong>🔗 URL:</strong> {{ url }}</p>
+
+            <!-- AI-Powered Result Box -->
+            <div class="result-box {% if 'Phishing' in result %}phishing shake{% else %}legitimate glow{% endif %}">
+                {{ result }}
+            </div>
+
+            <!-- Threat Score -->
+            <div class="threat-info">
+                <h4>📊 Security Breakdown</h4>
+                <p>🔥 Threat Level: 
+                    <span class="{% if 'Phishing' in result %}high{% else %}low{% endif %}">
+                        {% if 'Phishing' in result %}HIGH 🔴{% else %}LOW 🟢{% endif %}
+                    </span>
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="buttons">
+                <a href="/" class="btn btn-retry">🔄 Try Another</a>
+                <button class="btn btn-share" onclick="shareReport()">📤 Share Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GSAP Animation Effects
+        gsap.from(".result-card", { duration: 1, opacity: 0, y: -50, ease: "power2.out" });
+        gsap.from(".buttons .btn", { duration: 1, scale: 0.5, ease: "elastic.out(1, 0.5)" });
+
+        // Share Report Function
+        function shareReport() {
+            const url = "{{ url }}";
+            const result = "{{ result }}";
+            const message = `🚀 Phishing Detector Report\n🔗 URL: ${url}\n🛑 Result: ${result}`;
+            alert("Report Copied to Clipboard!");
+            navigator.clipboard.writeText(message);
+        }
+    </script>
+</body>
+</html>
